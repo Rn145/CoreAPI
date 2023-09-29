@@ -65,8 +65,8 @@ export default class CoreAPIListenersMain extends EventsClass {
     return event.returnValue = subscribeReturn;
   }
   _subscribe(event: Electron.IpcMainInvokeEvent, eventName: EventName, isUnSub?: boolean): SubscribeReturn {
-    if (isUnSub)
-      console.log(eventName)
+    //if (isUnSub)
+    //  console.log(eventName)
 
     isUnSub = isUnSub ?? false;
 
@@ -78,7 +78,7 @@ export default class CoreAPIListenersMain extends EventsClass {
     const webContents = event.sender;
     const window = Electron.BrowserWindow.fromWebContents(webContents);
     if (window === null) {
-      subscribeReturn.data = Errors.WINDOW_UNKNOWN(); // this error should not happen in principle
+      subscribeReturn.data = Errors.WINDOW_UNKNOWN(); // эта ошибка впринципе не должна происходить
       return subscribeReturn;
     }
 

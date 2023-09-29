@@ -26,7 +26,7 @@ const api = {
 
 Electron.contextBridge.exposeInMainWorld('CoreAPI', api);
 
-window.addEventListener("beforeunload", FullAPI._listeners._close);
+//window.addEventListener("beforeunload", FullAPI._listeners._close);
 
 declare global {
   const CoreAPI: typeof api;
