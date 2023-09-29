@@ -20,7 +20,8 @@ const api = {
     events: FullAPI.eventsSync,
   },
 
-  version: FullAPI.version
+  isDebug: FullAPI.isDebug,
+  isProduction: FullAPI.isProduction,
 };
 
 Electron.contextBridge.exposeInMainWorld('CoreAPI', api);

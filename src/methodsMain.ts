@@ -1,35 +1,10 @@
 import Electron from 'electron';
-import CoreAPIError from './error';
-import { createID, ID } from './libs/simpleSymbol';
 
 import Errors from './errorMessages';
-import { SimpleType, SimpleObject } from './libs/simpleTypes';
+import CHANNELS from './ipcChannels';
 
-export const newID = createID;
-export type MethodID = ID;
-export type Method = (window: Electron.BrowserWindow, ...args: SimpleType[]) => SimpleObject;
-export type MethodName = string;
-export type MethodReturn = {
-  isSuccess: boolean;
-  isObject: boolean;
-  data: any;
-}
-export type MethodData = {
-  method: Method;
-  isSync: boolean;
-}
+import { Window, Method, MethodName, MethodReturn, MethodID, MethodData, MethodsList, SimpleObject } from './types';
 type MethodsDataMap = Map<MethodName, MethodData>;
-
-export type MethodsList = {
-  async: MethodName[];
-  sync: MethodName[];
-}
-
-export const CHANNELS = {
-  EXECUTE: 'CoreAPI: execute_channel',
-  EXECUTE_SYNC: 'CoreAPI: execute_channel_sync',
-  GET_METHODS: 'CoreAPI: get_methods_channel',
-}
 
 export default class CoreAPIMethodsMain {
 
@@ -96,7 +71,7 @@ export default class CoreAPIMethodsMain {
 
     const methodData = this.methods.get(methodName);
     const webContents = event.sender;
-    const window = Electron.BrowserWindow.fromWebContents(webContents);
+    const window: Window = Electron.BrowserWindow.fromWebContents(webContents);
     if (window === null)
       methodReturn.data = Errors.WINDOW_UNKNOWN(); // эта ошибка впринципе не должна происходить
     else if (methodData === undefined)
@@ -127,7 +102,7 @@ export default class CoreAPIMethodsMain {
   _getMethods(event: Electron.IpcMainEvent) {
     return event.returnValue = JSON.stringify(this.getNames());
   }
-  _getMethodsInvoke(event: Electron.IpcMainInvokeEvent) {
+  _getMethodsInvoke(event: Electron.IpcMainInvokeEvent) {// eslint-disable-line
     return JSON.stringify(this.getNames());
   }
 

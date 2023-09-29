@@ -1,35 +1,45 @@
-import CoreAPI from "@CoreAPI";
-
-const preloadPath = CoreAPI.preloadPath();
-
-console.log(preloadPath);
-/*
 import Electron from 'electron';
+import CoreAPI from "CoreAPI";
+
 
 const app = Electron.app;
 
-const createWindow = () => {
-    const win = new Electron.BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            preload: path.join(__dirname, 'preload.js');
-        }
-    })
+//------------------------------------------------------------------------------------------------
+CoreAPI.addMethod('setTitle', (window: Electron.BrowserWindow, newTitle: string) => {
+  window.setTitle(newTitle);
+  return 'title changed to ' + newTitle;
+}, true);
 
-    win.loadFile('index.html');
+CoreAPI.addEvent('timer');
+setInterval(() => {
+  CoreAPI.emitEvent('timer', 'two seconds have passed');
+}, 2000);
+//------------------------------------------------------------------------------------------------
+
+const createWindow = () => {
+  const win = new Electron.BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      sandbox: false, //it is recommended not to use with webpack
+      preload: CoreAPI.preloadPath()
+    }
+  })
+
+  win.loadFile('renderer.html');
 }
 
 app.whenReady().then(() => {
-    createWindow()
+  createWindow()
 
-    app.on('activate', () => {
-        if (Electron.BrowserWindow.getAllWindows().length === 0) createWindow();
-    });
+  app.on('activate', () => {
+    if (Electron.BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
 })
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin')
-        app.quit();
+  if (process.platform !== 'darwin') {
+    app.quit();
+    process.exit();
+  }
 });
-*/

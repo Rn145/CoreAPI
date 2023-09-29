@@ -1,28 +1,13 @@
 import Electron from 'electron';
 import CoreAPIError from './error';
-import EventsClass from './libs/events'
+import EventsClass from 'events'
 
 import Errors from './errorMessages';
-import { SimpleObject } from './libs/simpleTypes';
+import CHANNELS from './ipcChannels';
 
-export type EventName = string;
-export type SubscribeReturn = {
-  isSuccess: boolean;
-  data: string;
-}
-
-export type Window = Electron.BrowserWindow;
-export type Windows = Window[];
+import { SubscribeReturn, EventName, SimpleObject, Window } from './types';
+type Windows = Window[];
 type Events = Map<EventName, Windows>;
-
-
-
-export const CHANNELS = {
-  CALL_EVENT: 'CoreAPI: call_event_channel',
-  SUBSCRIBE: 'CoreAPI: subscribe_channel',
-  UNSUBSCRIBE: 'CoreAPI: unsubscribe_channel',
-  GET_EVENTS: 'CoreAPI: get_events_channel',
-}
 
 export default class CoreAPIListenersMain extends EventsClass {
 
@@ -68,11 +53,11 @@ export default class CoreAPIListenersMain extends EventsClass {
     }
 
     if (isUnSub === false) {
-      this._callListeners('subscribe', eventName, window);
+      this.emit('subscribe', eventName, window);
       windows.push(window);
     }
     else {
-      this._callListeners('unsubscribe', eventName, window);
+      this.emit('unsubscribe', eventName, window);
       this.events.set(eventName, windows.filter((_window) => _window !== window));
     }
 
@@ -93,7 +78,7 @@ export default class CoreAPIListenersMain extends EventsClass {
     const webContents = event.sender;
     const window = Electron.BrowserWindow.fromWebContents(webContents);
     if (window === null) {
-      subscribeReturn.data = Errors.WINDOW_UNKNOWN(); // эта ошибка впринципе не должна происходить
+      subscribeReturn.data = Errors.WINDOW_UNKNOWN(); // this error should not happen in principle
       return subscribeReturn;
     }
 
@@ -104,11 +89,11 @@ export default class CoreAPIListenersMain extends EventsClass {
     }
 
     if (isUnSub === false) {
-      this._callListeners('subscribe', eventName, window);
+      this.emit('subscribe', eventName, window);
       windows.push(window);
     }
     else {
-      this._callListeners('unsubscribe', eventName, window);
+      this.emit('unsubscribe', eventName, window);
       this.events.set(eventName, windows.filter((_window) => _window !== window));
     }
 
@@ -125,7 +110,7 @@ export default class CoreAPIListenersMain extends EventsClass {
   _getEventsSync(event: Electron.IpcMainEvent) {
     return event.returnValue = this.getNames();
   }
-  _getEvents(event: Electron.IpcMainInvokeEvent) {
+  _getEvents(event: Electron.IpcMainInvokeEvent) { // eslint-disable-line
     return this.getNames();
   }
 
@@ -148,7 +133,7 @@ export default class CoreAPIListenersMain extends EventsClass {
   callEvent(eventName: EventName, ...args: SimpleObject[]) {
 
     const windows = this.events.get(eventName);
-    //console.log(windows)
+    
     if (windows === undefined)
       return console.warn(Errors.CALL_UNKNOWN_EVENT(eventName));
 

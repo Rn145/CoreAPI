@@ -1,17 +1,10 @@
 import Electron from 'electron';
-import CoreAPIError from './error';
 
-import { MethodName } from './methodsMain';
-import { EventName } from './listenersMain';
+import { MethodName, EventName, SimpleObject, Listener, ListenerID } from './types';
 
-import { } from '.';
 import CoreAPIMethodsClient from './methodsClient';
-import CoreAPIListenersClient, { Listener, ListenerID } from './listenersClient';
-import { SimpleObject } from './libs/simpleTypes';
-
-export const CHANNELS = {
-  GET_VERSION: 'CoreAPI: get_version_channel',
-}
+import CoreAPIListenersClient from './listenersClient';
+import CHANNELS from './ipcChannels';
 
 
 export default class CoreAPIClient {
@@ -19,7 +12,8 @@ export default class CoreAPIClient {
   _methods = new CoreAPIMethodsClient();
   _listeners = new CoreAPIListenersClient();
 
-  version = 'development';
+  isDebug = false;
+  isProduction = false;
 
   constructor() {
     this.exec = this.exec.bind(this);
@@ -36,7 +30,8 @@ export default class CoreAPIClient {
     this.methodsSync = this.methodsSync.bind(this);
     this.eventsSync = this.eventsSync.bind(this);
 
-    this.version = Electron.ipcRenderer.sendSync(CHANNELS.GET_VERSION);
+    this.isDebug = Electron.ipcRenderer.sendSync(CHANNELS.GET_IS_DEBUG);
+    this.isProduction = Electron.ipcRenderer.sendSync(CHANNELS.GET_IS_PRODUCTION);
   }
 
   async exec(methodName: MethodName, ...args: SimpleObject[]): Promise<SimpleObject> {

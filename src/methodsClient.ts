@@ -1,23 +1,23 @@
 import Electron from 'electron';
 import CoreAPIError from './error';
+import { createID } from './simpleSymbol';
 
-import { SimpleObject } from './libs/simpleTypes';
-import { CHANNELS, MethodID, MethodName, MethodReturn, MethodsList, newID } from './methodsMain';
 import Errors from './errorMessages';
+import CHANNELS from './ipcChannels';
 
-export type PromiseData = {
+import { MethodName, MethodReturn, MethodsList, MethodID, SimpleObject } from './types';
+type MethodsPromisesMap = Map<MethodID, PromiseData>;
+type PromiseData = {
   resolve: (value?: SimpleObject) => void;
   reject: (value?: SimpleObject | Error) => void;
   methodName: MethodName;
 }
-export type MethodsPromisesMap = Map<MethodID, PromiseData>;
 
-// Проверку существования запрашиваемой функции стало возможным произвести сразу здесь, нежели производить проверку в API/index.js
-// Но в API/index.js готова полноценная обработка ошибок, а здесь их приём. Изменять проверку запрашиваемых функций не рекомендуется.
+const newID = createID;
 
 export default class CoreAPIMethodsClient {
 
-  methodsPromises: MethodsPromisesMap = new Map();
+  private methodsPromises: MethodsPromisesMap = new Map();
 
   constructor() {
     this.execute = this.execute.bind(this);

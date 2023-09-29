@@ -1,24 +1,21 @@
 import Electron from 'electron';
 import CoreAPIError from './error';
-import { createID, ID } from './libs/simpleSymbol';
-import { SimpleObject } from './libs/simpleTypes';
+import { createID } from './simpleSymbol';
 
-import { CHANNELS, EventName, SubscribeReturn } from './listenersMain';
 import Errors from './errorMessages';
+import CHANNELS from './ipcChannels';
 
-const WINDOW_CLOSE_EVENT_NAME = 'Window.close';
-
-const newID = createID;
-export type ListenerID = ID;
-
-export type Listener = Function;
+import { EventName, SubscribeReturn, Listener, ListenerID, SimpleObject } from './types';
+type ListenersMap = Map<EventName, ListenersData>;
 type ListenerData = {
   listener: Listener;
   isOnce: boolean;
   id: ListenerID;
 };
 type ListenersData = ListenerData[];
-type ListenersMap = Map<EventName, ListenersData>;
+
+const WINDOW_CLOSE_EVENT_NAME = 'Window.close';
+const newID = createID;
 
 export default class CoreAPIListenersClient {
 
