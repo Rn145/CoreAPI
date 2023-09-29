@@ -1,37 +1,21 @@
 {
-  "name": "core-api",
-  "version": "0.0.0",
+  "name": "electron-core-api",
+  "version": "1.0.1",
   "description": "Easy API to communicate betwen a renderer process to the main process.",
   "main": "./dist/src",
   "module": "./dist/src",
   "author": "Ruslan Fazilzyanov (Ruslan145)",
-  "private": "false",
   "files": [
-    "dist",
-    "package.json",
-    "LICENSE",
-    "README.md"
+    "dist"
   ],
   "scripts": {
-    "build": "tsc && tsc-alias && cpy ./test/renderer.html ./dist",
-    "test": "npm run build && electron ./dist/test/main.js",
-    "build:test": "electron-builder"
-  },
-  "build": {
-    "appId": "core-api-present",
-    "directories": {
-      "output": "./build"
-    },
-    "extraResources": [
-      "./src",
-      "./test"
-    ]
+    "build": "tsc && cpy ./test/renderer.html ./dist",
+    "test": "npm run build && electron ./dist/test/main.js"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
     "cpy-cli": "^5.0.0",
     "electron": "^26.2.4",
-    "electron-builder": "^24.6.4",
     "tsc-alias": "^1.8.7",
     "typescript": "^4.0.5"
   },
@@ -44,5 +28,6 @@
     "events",
     "methods"
   ],
-  "license": "ISC"
+  "license": "MIT",
+  "homepage": "https://github.com/Rn145/CoreAPI#coreapi"
 }

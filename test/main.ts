@@ -1,5 +1,5 @@
 import Electron from 'electron';
-import CoreAPI from "CoreAPI";
+import CoreAPI from "electron-core-api";
 
 
 const app = Electron.app;
