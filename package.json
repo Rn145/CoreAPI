@@ -2,16 +2,10 @@
   "name": "electron-core-api",
   "version": "1.0.3",
   "description": "Easy API to communicate betwen a renderer process to the main process.",
+  "author": "Ruslan Fazilzyanov (Ruslan145)",
+  "email": "fazilzyanov.ruslan@yandex.ru",
   "main": "./dist/src",
   "module": "./dist/src",
-  "author": "Ruslan Fazilzyanov (Ruslan145)",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsc && cpy ./test/renderer.html ./dist",
-    "test": "npm run build && electron ./dist/test/main.js"
-  },
   "devDependencies": {
     "@types/node": "^14.14.7",
     "cpy-cli": "^5.0.0",
@@ -27,6 +21,16 @@
     "events",
     "methods"
   ],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && cpy ./test/renderer.html ./dist",
+    "test": "npm run build && electron ./dist/test/main.js"
+  },
   "license": "MIT",
-  "homepage": "https://github.com/Rn145/CoreAPI#electron-coreapi"
+  "homepage": "https://github.com/Rn145/CoreAPI#electron-coreapi",
+  "bugs": {
+    "url": "https://github.com/Rn145/CoreAPI/issues"
+  }
 }
