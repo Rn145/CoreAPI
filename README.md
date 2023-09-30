@@ -1,5 +1,8 @@
 # Electron CoreAPI
 
+[EN](https://github.com/Rn145/CoreAPI/tree/main#electron-coreapi "English")
+[RU](https://github.com/Rn145/CoreAPI/blob/main/README_RU.md "Русский")
+
 This is a tool for fast communication between the main process and the renderer process in Electron.
 It is based on the IPC toolkit of Electron itself and is designed to simplify working with IPC by fully abstracting the developer from it.
 
