@@ -21,6 +21,9 @@ class CoreAPI extends Events {
   constructor() {
     super();
 
+    this._listeners.on('subscribe', (...args: any[]) => this.emit('subscribe', ...args));
+    this._listeners.on('unsubscribe', (...args: any[]) => this.emit('unsubscribe', ...args));
+
     const get_debug = (event: Electron.IpcMainEvent) => event.returnValue = this.isDebug;
     Electron.ipcMain.on(CHANNELS.GET_IS_DEBUG, get_debug);
 
