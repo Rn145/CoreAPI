@@ -129,6 +129,7 @@ type Window = Electron.BrowserWindow;
 
 type ListenerID = string;
 
+// Важно! SimpleType фактически установлен как any
 type SimpleType = string | number | boolean | null | undefined;
 type SimpleObject = SimpleType | SimpleObject[] | { [index: string]: SimpleObject };
 
@@ -149,6 +150,20 @@ type MethodsList = {
 
 
 ## API main process (electron-core-api/main)
+
+### on subscribe
+Событие начала прослушивания в renderer процессе.
+Возвращает имя события и окно.
+```ts
+CoreAPI.on('subscribe', (eventName: EventName, window: Window) => void);
+```
+
+### on unsubscribe
+Событие прекращения прослушивания в renderer процессе.
+Возвращает имя события и окно.
+```ts
+CoreAPI.on('unsubscribe', (eventName: EventName, window: Window) => void);
+```
 
 ### isDebug
 Информация об отладке. Вводится вами вручную. Просто транслируется в renderer процессы. Притом, renderer процесс запрашивает это свойство только при запуске.

@@ -130,6 +130,7 @@ type Window = Electron.BrowserWindow;
 
 type ListenerID = string;
 
+// Warning! SimpleType is actually set as any
 type SimpleType = string | number | boolean | null | undefined;
 type SimpleObject = SimpleType | SimpleObject[] | { [index: string]: SimpleObject };
 
@@ -150,6 +151,20 @@ type MethodsList = {
 
 
 ## API main process (electron-core-api/main)
+
+### on subscribe
+The event of beginning listening in the renderer process.
+Returns the name of the event and window.
+```ts
+CoreAPI.on('subscribe', (eventName: EventName, window: Window) => void);
+```
+
+### on unsubscribe
+The event of ending listening in the renderer process.
+Returns the name of the event and window.
+```ts
+CoreAPI.on('unsubscribe', (eventName: EventName, window: Window) => void);
+```
 
 ### isDebug
 Debug information.
