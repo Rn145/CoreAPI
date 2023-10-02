@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "build": "tsc && cpy ./test/renderer.html ./dist",
-    "test": "npm run build && electron ./dist/test/main.js"
+    "example": "npm run build && electron ./dist/example/main.js"
   },
   "license": "MIT",
   "homepage": "https://github.com/Rn145/CoreAPI#electron-coreapi",
