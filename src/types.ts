@@ -1,7 +1,7 @@
 
 import { ID } from './simpleSymbol';
 
-type SimpleType = string | number | boolean | null | undefined;
+type SimpleType = any;//string | number | boolean | null | undefined;
 export type SimpleObject = SimpleType | SimpleObject[] | { [index: string]: SimpleObject };
 
 export type Window = Electron.BrowserWindow;
