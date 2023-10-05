@@ -25,7 +25,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && cpy ./example/renderer.html ./dist",
+    "build": "tsc --clean && cpy ./example/renderer.html ./dist",
     "example": "npm run build && electron ./dist/example/main.js"
   },
   "license": "MIT",
