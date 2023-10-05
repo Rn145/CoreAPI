@@ -1,6 +1,6 @@
 {
   "name": "electron-core-api",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Easy API to communicate betwen a renderer process to the main process.",
   "author": "Ruslan Fazilzyanov (Ruslan145)",
   "email": "fazilzyanov.ruslan@yandex.ru",
