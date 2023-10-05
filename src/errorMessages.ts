@@ -17,6 +17,7 @@ const EN = {
   UNSUBSCRIBE_EVENT_NO_LISTENERS: (eventName: unknown) => EN.UNSUBSCRIBE_FAIL(eventName, `the event does not contain a single listener`),
   UNSUBSCRIBE_EVENT_UNKNOWN_LISTENER: (eventName: unknown) => EN.UNSUBSCRIBE_FAIL(eventName, `there is no listener with this ID`),
   EVENT_UNKNOWN: () => `event is not exist`,
+  EVENT_HAVENT_LISTENERS: (eventName: string) => `event ${eventName}: call fail, the event does not contain a single listener in client`,
 
   LOAD_FAIL: (script_path) => `error in library "${script_path}"`,
 };
@@ -39,6 +40,7 @@ const RU = {
   UNSUBSCRIBE_EVENT_NO_LISTENERS: (eventName: unknown) => RU.UNSUBSCRIBE_FAIL(eventName, `событие не имеет ни одного прослушивателя`),
   UNSUBSCRIBE_EVENT_UNKNOWN_LISTENER: (eventName: unknown) => RU.UNSUBSCRIBE_FAIL(eventName, `прослушивателя с таким ID не существует`),
   EVENT_UNKNOWN: () => `событие не существует`,
+  EVENT_HAVENT_LISTENERS: (eventName: string) => `событие ${eventName}: не удалось инициировать, в renderer процессе нет прослушивателей этого события`,
 
   LOAD_FAIL: (script_path) => `ошибка в библиотеке "${script_path}"`,
 };

@@ -59,6 +59,7 @@ export default class CoreAPIListenersClient {
       throw new CoreAPIError(Errors.UNSUBSCRIBE_EVENT_UNKNOWN_LISTENER(eventName));
 
     if (listenersData.length === 1) {
+
       this.listeners.delete(eventName);
 
       const unsubscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.UNSUBSCRIBE, eventName);
@@ -71,6 +72,10 @@ export default class CoreAPIListenersClient {
 
   async _subscribe(eventName: string, listener: Listener, isOnce: boolean): Promise<ListenerID> {
 
+    const subscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.SUBSCRIBE, eventName);
+    if (subscribeReturn.isSuccess === false)
+      throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, subscribeReturn.data));
+
     const listenerData: ListenerData = {
       listener,
       isOnce,
@@ -80,13 +85,8 @@ export default class CoreAPIListenersClient {
     let listenersdata = this.listeners.get(eventName);
 
     if (listenersdata === undefined) {
-
       this.listeners.set(eventName, []);
       listenersdata = this.listeners.get(eventName);
-
-      const subscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.SUBSCRIBE, eventName);
-      if (subscribeReturn.isSuccess === false)
-        throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, subscribeReturn.data));
     }
 
     listenersdata.push(listenerData);
@@ -112,11 +112,12 @@ export default class CoreAPIListenersClient {
       throw new CoreAPIError(Errors.UNSUBSCRIBE_EVENT_UNKNOWN_LISTENER(eventName));
 
     if (listenersData.length === 1) {
+
+      this.listeners.delete(eventName);
+
       const unsubscribeReturn: SubscribeReturn = Electron.ipcRenderer.sendSync(CHANNELS.UNSUBSCRIBE, eventName);
       if (unsubscribeReturn.isSuccess === false)
         throw new CoreAPIError(Errors.UNSUBSCRIBE_FAIL(eventName, unsubscribeReturn.data));
-
-      this.listeners.delete(eventName);
     }
     else
       listenersData.splice(listenerDataIndex, 1);
@@ -125,6 +126,10 @@ export default class CoreAPIListenersClient {
 
   _subscribeSync(eventName: string, listener: Listener, isOnce: boolean): ListenerID {
 
+    const subscribeReturn: SubscribeReturn = Electron.ipcRenderer.sendSync(CHANNELS.SUBSCRIBE, eventName);
+    if (subscribeReturn.isSuccess === false)
+      throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, subscribeReturn.data));
+
     const listenerData: ListenerData = {
       listener,
       isOnce,
@@ -132,16 +137,14 @@ export default class CoreAPIListenersClient {
     };
 
     let listenersdata = this.listeners.get(eventName);
-    if (listenersdata === undefined) {
-      const subscribeReturn: SubscribeReturn = Electron.ipcRenderer.sendSync(CHANNELS.SUBSCRIBE, eventName);
-      if (subscribeReturn.isSuccess === false)
-        throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, subscribeReturn.data));
 
+    if (listenersdata === undefined) {
       listenersdata = [];
       this.listeners.set(eventName, listenersdata);
     }
+
     listenersdata.push(listenerData);
-    console.log('reg: ', eventName)
+    
     return listenerData.id;
   }
 
@@ -155,7 +158,7 @@ export default class CoreAPIListenersClient {
   async _handler(event: Electron.IpcRendererEvent, eventName: string, args: SimpleObject[]) {
     const listenersData = this.listeners.get(eventName);
     if (listenersData === undefined)
-      return console.error(new CoreAPIError(`CoreAPI: event ${eventName}: call fail: the event does not contain a single listener`));
+      return console.error(new CoreAPIError(Errors.EVENT_HAVENT_LISTENERS(eventName)));
 
     const filtedListenersData = listenersData.filter((listenerData) => {
       try {
@@ -169,11 +172,12 @@ export default class CoreAPIListenersClient {
     });
 
     if (filtedListenersData.length === 0) {
-      const unsubscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.UNSUBSCRIBE, eventName);
-      if (unsubscribeReturn.isSuccess === false)
-        console.error(new CoreAPIError(`CoreAPI: event ${eventName}: unsubscribe fail: ${unsubscribeReturn.data}.`));
 
       this.listeners.delete(eventName);
+
+      const unsubscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.UNSUBSCRIBE, eventName);
+      if (unsubscribeReturn.isSuccess === false)
+        console.error(new CoreAPIError(Errors.UNSUBSCRIBE_FAIL(eventName, unsubscribeReturn.data)));
     }
     else
       this.listeners.set(eventName, filtedListenersData);
