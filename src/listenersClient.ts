@@ -59,11 +59,11 @@ export default class CoreAPIListenersClient {
       throw new CoreAPIError(Errors.UNSUBSCRIBE_EVENT_UNKNOWN_LISTENER(eventName));
 
     if (listenersData.length === 1) {
+      this.listeners.delete(eventName);
+
       const unsubscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.UNSUBSCRIBE, eventName);
       if (unsubscribeReturn.isSuccess === false)
         throw new CoreAPIError(Errors.UNSUBSCRIBE_FAIL(eventName, unsubscribeReturn.data));
-
-      this.listeners.delete(eventName);
     }
     else
       listenersData.splice(listenerDataIndex, 1);
@@ -78,13 +78,15 @@ export default class CoreAPIListenersClient {
     };
 
     let listenersdata = this.listeners.get(eventName);
+
     if (listenersdata === undefined) {
+
+      this.listeners.set(eventName, []);
+      listenersdata = this.listeners.get(eventName);
+
       const subscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.SUBSCRIBE, eventName);
       if (subscribeReturn.isSuccess === false)
         throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, subscribeReturn.data));
-
-      listenersdata = [];
-      this.listeners.set(eventName, listenersdata);
     }
 
     listenersdata.push(listenerData);
