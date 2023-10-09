@@ -8,6 +8,7 @@ const CHANNELS = {
   SUBSCRIBE: 'CoreAPI: subscribe_channel',
   UNSUBSCRIBE: 'CoreAPI: unsubscribe_channel',
   GET_EVENTS: 'CoreAPI: get_events_channel',
+  HAS_EVENT: 'CoreAPI: has_event_channel',
 
   //methods
   EXECUTE: 'CoreAPI: execute_channel',

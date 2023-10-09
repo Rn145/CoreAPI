@@ -1,8 +1,16 @@
 
 import { ID } from './simpleSymbol';
 
-type SimpleType = any;//string | number | boolean | null | undefined;
+type SimpleType = string | number | boolean | null | undefined;
 export type SimpleObject = SimpleType | SimpleObject[] | { [index: string]: SimpleObject };
+/*export type SimpleObject =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | SimpleObject[]
+  | { [index: string]: SimpleObject };*/
 
 export type Window = Electron.BrowserWindow;
 export type Windows = Window[];
@@ -32,3 +40,4 @@ export type SubscribeReturn = {
   isSuccess: boolean;
   data: string;
 }
+export type HasEventReturn = boolean;

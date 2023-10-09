@@ -5,7 +5,7 @@ import { createID } from './simpleSymbol';
 import Errors from './errorMessages';
 import CHANNELS from './ipcChannels';
 
-import { EventName, SubscribeReturn, Listener, ListenerID, SimpleObject } from './types';
+import { EventName, SubscribeReturn, HasEventReturn, Listener, ListenerID, SimpleObject } from './types';
 type ListenersMap = Map<EventName, ListenersData>;
 type ListenerData = {
   listener: Listener;
@@ -72,9 +72,9 @@ export default class CoreAPIListenersClient {
 
   async _subscribe(eventName: string, listener: Listener, isOnce: boolean): Promise<ListenerID> {
 
-    const subscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.SUBSCRIBE, eventName);
-    if (subscribeReturn.isSuccess === false)
-      throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, subscribeReturn.data));
+    const hasEventReturn: HasEventReturn = await Electron.ipcRenderer.invoke(CHANNELS.HAS_EVENT, eventName);
+    if (!hasEventReturn)
+      throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, Errors.EVENT_UNKNOWN()));
 
     const listenerData: ListenerData = {
       listener,
@@ -83,13 +83,20 @@ export default class CoreAPIListenersClient {
     };
 
     let listenersdata = this.listeners.get(eventName);
+    let subscribeFlag = listenersdata === undefined;
 
-    if (listenersdata === undefined) {
+    if (subscribeFlag) {
       this.listeners.set(eventName, []);
       listenersdata = this.listeners.get(eventName);
     }
 
     listenersdata.push(listenerData);
+
+    if (subscribeFlag) {
+      const subscribeReturn: SubscribeReturn = await Electron.ipcRenderer.invoke(CHANNELS.SUBSCRIBE, eventName);
+      if (subscribeReturn.isSuccess === false)
+        throw new CoreAPIError(Errors.SUBSCRIBE_FAIL(eventName, subscribeReturn.data));
+    }
 
     return listenerData.id;
   }
