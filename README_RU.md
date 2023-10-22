@@ -138,7 +138,7 @@ type JSON =
   | Array<JSON>;
 type SimpleObject = JSON
 
-type Method = (window: Window, ...args: SimpleObject[]) => SimpleObject;
+type Method = (window: Window, ...args: SimpleObject[]) => SimpleObject | void;
 
 type MethodData = {
   method: Method;
