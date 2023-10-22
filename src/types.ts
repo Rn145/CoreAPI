@@ -19,7 +19,7 @@ export type Windows = Window[];
 
 export type MethodName = string;
 export type MethodID = ID;
-export type Method = <T>(window: Window, ...args: SimpleObject<T>[]) => SimpleObject<any>;
+export type Method = <T>(window: Window, ...args: SimpleObject<T>[]) => SimpleObject<any> | void;
 export type MethodReturn = {
   isSuccess: boolean;
   isObject: boolean;
