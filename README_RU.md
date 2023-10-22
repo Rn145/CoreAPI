@@ -129,9 +129,14 @@ type Window = Electron.BrowserWindow;
 
 type ListenerID = string;
 
-// Важно! SimpleType фактически установлен как any
-type SimpleType = string | number | boolean | null | undefined;
-type SimpleObject = SimpleType | SimpleObject[] | { [index: string]: SimpleObject };
+type JSON =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: JSON }
+  | Array<JSON>;
+type SimpleObject = JSON
 
 type Method = (window: Window, ...args: SimpleObject[]) => SimpleObject;
 
