@@ -19,7 +19,7 @@ const EN = {
   EVENT_UNKNOWN: () => `event is not exist`,
   EVENT_HAVENT_LISTENERS: (eventName: string) => `event ${eventName}: call fail, the event does not contain a single listener in client`,
 
-  LOAD_FAIL: (script_path) => `error in library "${script_path}"`,
+  LOAD_FAIL: (scriptPath) => `error in library "${scriptPath}"`,
 };
 
 const RU = {
@@ -42,7 +42,7 @@ const RU = {
   EVENT_UNKNOWN: () => `событие не существует`,
   EVENT_HAVENT_LISTENERS: (eventName: string) => `событие ${eventName}: не удалось инициировать, в renderer процессе нет прослушивателей этого события`,
 
-  LOAD_FAIL: (script_path) => `ошибка в библиотеке "${script_path}"`,
+  LOAD_FAIL: (scriptPath) => `ошибка в библиотеке "${scriptPath}"`,
 };
 
 

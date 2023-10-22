@@ -83,7 +83,7 @@ export default class CoreAPIListenersClient {
     };
 
     let listenersdata = this.listeners.get(eventName);
-    let subscribeFlag = listenersdata === undefined;
+    const subscribeFlag = listenersdata === undefined;
 
     if (subscribeFlag) {
       this.listeners.set(eventName, []);
@@ -162,7 +162,7 @@ export default class CoreAPIListenersClient {
     return Electron.ipcRenderer.sendSync(CHANNELS.GET_EVENTS);
   }
 
-  async _handler(event: Electron.IpcRendererEvent, eventName: string, args: SimpleObject[]) {
+  async _handler(event: Electron.IpcRendererEvent, eventName: string, args: SimpleObject<any>[]) {
     const listenersData = this.listeners.get(eventName);
     if (listenersData === undefined)
       return console.error(new CoreAPIError(Errors.EVENT_HAVENT_LISTENERS(eventName)));

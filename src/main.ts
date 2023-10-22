@@ -8,7 +8,7 @@ import CoreAPIListenersMain from './listenersMain';
 import Events from 'events';
 import CHANNELS from './ipcChannels';
 
-import { MethodsList, MethodName, MethodData, Method, EventName, Window, SimpleObject } from './types';
+import { MethodsList, MethodName, MethodData, Method, EventName, Window, TupleToSimpleObject } from './types';
 
 class CoreAPI extends Events {
 
@@ -72,11 +72,11 @@ class CoreAPI extends Events {
     return this._listeners.remove(eventName);
   }
 
-  emitEvent(eventName: EventName, ...args: SimpleObject[]) {
+  emitEvent<T extends any[]>(eventName: EventName, ...args: TupleToSimpleObject<T>) {
     this._listeners.callEvent(eventName, ...args);
   }
 
-  emitEventInWindow(eventName: EventName, window: Window, ...args: SimpleObject[]) {
+  emitEventInWindow<T extends any[]>(eventName: EventName, window: Window, ...args: TupleToSimpleObject<T>) {
     this._listeners.callEventInWindow(eventName, window, ...args);
   }
 }

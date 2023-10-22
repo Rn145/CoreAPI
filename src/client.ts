@@ -1,11 +1,10 @@
 import Electron from 'electron';
 
-import { MethodName, EventName, SimpleObject, Listener, ListenerID } from './types';
+import { MethodName, EventName, SimpleObject, TupleToSimpleObject, Listener, ListenerID } from './types';
 
 import CoreAPIMethodsClient from './methodsClient';
 import CoreAPIListenersClient from './listenersClient';
 import CHANNELS from './ipcChannels';
-
 
 export default class CoreAPIClient {
 
@@ -34,7 +33,7 @@ export default class CoreAPIClient {
     this.isProduction = Electron.ipcRenderer.sendSync(CHANNELS.GET_IS_PRODUCTION);
   }
 
-  async exec(methodName: MethodName, ...args: SimpleObject[]): Promise<SimpleObject> {
+  async exec<T extends any[]>(methodName: MethodName, ...args: TupleToSimpleObject<T>): Promise<SimpleObject<any>> {
     return this._methods.execute(methodName, ...args);
   }
   async on(eventName: EventName, listener: Listener): Promise<ListenerID> {
@@ -47,7 +46,7 @@ export default class CoreAPIClient {
     return this._listeners.remove(eventName, listenerID);
   }
 
-  execSync(methodName: MethodName, ...args: SimpleObject[]): SimpleObject {
+  execSync<T extends any[]>(methodName: MethodName, ...args: TupleToSimpleObject<T>): SimpleObject<any> {
     return this._methods.executeSync(methodName, ...args);
   }
   onSync(eventName: EventName, listener: Listener): ListenerID {

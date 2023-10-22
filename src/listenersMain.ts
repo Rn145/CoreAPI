@@ -5,7 +5,7 @@ import EventsClass from 'events'
 import Errors from './errorMessages';
 import CHANNELS from './ipcChannels';
 
-import { SubscribeReturn, EventName, SimpleObject, Window, HasEventReturn } from './types';
+import { SubscribeReturn, EventName, TupleToSimpleObject, Window, HasEventReturn } from './types';
 type Windows = Window[];
 type Events = Map<EventName, Windows>;
 
@@ -142,7 +142,7 @@ export default class CoreAPIListenersMain extends EventsClass {
     return this.events.delete(eventName);
   }
 
-  callEvent(eventName: EventName, ...args: SimpleObject[]) {
+  callEvent<T extends any[]>(eventName: EventName, ...args: TupleToSimpleObject<T>) {
 
     const windows = this.events.get(eventName);
     
@@ -153,7 +153,7 @@ export default class CoreAPIListenersMain extends EventsClass {
       window.webContents.send(CHANNELS.CALL_EVENT, eventName, args);
     });
   }
-  callEventInWindow(eventName: EventName, window: Window, ...args: SimpleObject[]) {
+  callEventInWindow<T extends any[]>(eventName: EventName, window: Window, ...args: TupleToSimpleObject<T>) {
 
     const windows = this.events.get(eventName);
     if (windows === undefined)

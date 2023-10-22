@@ -1,23 +1,25 @@
 
 import { ID } from './simpleSymbol';
 
-type SimpleType = string | number | boolean | null | undefined;
-export type SimpleObject = SimpleType | SimpleObject[] | { [index: string]: SimpleObject };
-/*export type SimpleObject =
+type JSON =
   | string
   | number
   | boolean
   | null
-  | undefined
-  | SimpleObject[]
-  | { [index: string]: SimpleObject };*/
+  | { [key: string]: JSON }
+  | Array<JSON>;
+
+type JSONInterface<ArgType> = { [key in keyof ArgType]: JSON };
+
+export type SimpleObject<ArgType> = JSON | JSONInterface<ArgType>;
+export type TupleToSimpleObject<T extends any[]> = Array<SimpleObject<T[number]>>;
 
 export type Window = Electron.BrowserWindow;
 export type Windows = Window[];
 
 export type MethodName = string;
 export type MethodID = ID;
-export type Method = (window: Window, ...args: SimpleObject[]) => SimpleObject;
+export type Method = <T>(window: Window, ...args: SimpleObject<T>[]) => SimpleObject<any>;
 export type MethodReturn = {
   isSuccess: boolean;
   isObject: boolean;

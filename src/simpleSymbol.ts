@@ -29,7 +29,7 @@ export default class SimpleSymbol {
         return this.ids.get(symbol);
     }
 
-    _create(): { symbol: symbol; id: ID; } {
+    _create(): { symbol: symbol; id: ID } {
         const symbol = Symbol();
         const id = createID();
 

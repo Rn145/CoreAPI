@@ -5,11 +5,11 @@ import { createID } from './simpleSymbol';
 import Errors from './errorMessages';
 import CHANNELS from './ipcChannels';
 
-import { MethodName, MethodReturn, MethodsList, MethodID, SimpleObject } from './types';
-type MethodsPromisesMap = Map<MethodID, PromiseData>;
-type PromiseData = {
-  resolve: (value?: SimpleObject) => void;
-  reject: (value?: SimpleObject | Error) => void;
+import { MethodName, MethodReturn, MethodsList, MethodID, SimpleObject, TupleToSimpleObject } from './types';
+type MethodsPromisesMap<T> = Map<MethodID, PromiseData<T>>;
+type PromiseData<T> = {
+  resolve: (value?: SimpleObject<T>) => void;
+  reject: (value?: SimpleObject<T> | Error) => void;
   methodName: MethodName;
 }
 
@@ -17,7 +17,7 @@ const newID = createID;
 
 export default class CoreAPIMethodsClient {
 
-  private methodsPromises: MethodsPromisesMap = new Map();
+  private methodsPromises: MethodsPromisesMap<any> = new Map();
 
   constructor() {
     this.execute = this.execute.bind(this);
@@ -30,11 +30,11 @@ export default class CoreAPIMethodsClient {
     Electron.ipcRenderer.on(CHANNELS.EXECUTE, this._executeHandler);
   }
 
-  execute(methodName: MethodName, ...args: SimpleObject[]): Promise<SimpleObject> {
+  execute<T extends any[]>(methodName: MethodName, ...args: TupleToSimpleObject<T>): Promise<SimpleObject<any>> {
     return new Promise((resolve, reject) => {
 
       const id: MethodID = newID();
-      const data: PromiseData = { resolve, reject, methodName };
+      const data: PromiseData<any> = { resolve, reject, methodName };
 
       this.methodsPromises.set(id, data);
 
@@ -56,7 +56,7 @@ export default class CoreAPIMethodsClient {
     promise.resolve(answer.data);
   }
 
-  executeSync(methodName: MethodName, ...args: SimpleObject[]): SimpleObject {
+  executeSync<T extends any[]>(methodName: MethodName, ...args: TupleToSimpleObject<T>): SimpleObject<any> {
     const answer: MethodReturn = Electron.ipcRenderer.sendSync(CHANNELS.EXECUTE_SYNC, methodName, ...args);
 
     if (answer.isSuccess === false)

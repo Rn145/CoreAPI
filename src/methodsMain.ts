@@ -3,7 +3,7 @@ import Electron from 'electron';
 import Errors from './errorMessages';
 import CHANNELS from './ipcChannels';
 
-import { Window, Method, MethodName, MethodReturn, MethodID, MethodData, MethodsList, SimpleObject } from './types';
+import { Window, Method, MethodName, MethodReturn, MethodID, MethodData, MethodsList, TupleToSimpleObject } from './types';
 type MethodsDataMap = Map<MethodName, MethodData>;
 
 export default class CoreAPIMethodsMain {
@@ -24,7 +24,7 @@ export default class CoreAPIMethodsMain {
     Electron.ipcMain.handle(CHANNELS.GET_METHODS, this._getMethodsInvoke);
   }
 
-  async _executeProcessor(event: Electron.IpcMainEvent, methodName: MethodName, id: MethodID, ...args: SimpleObject[]): Promise<void> {
+  async _executeProcessor(event: Electron.IpcMainEvent, methodName: MethodName, id: MethodID, ...args: TupleToSimpleObject<any>): Promise<void> {
 
     const methodReturn: MethodReturn = {
       isSuccess: false,
@@ -61,7 +61,7 @@ export default class CoreAPIMethodsMain {
     event.reply(CHANNELS.EXECUTE, id, methodReturn);
   }
 
-  _executeProcessorSync(event: Electron.IpcMainEvent, methodName: MethodName, ...args: SimpleObject[]): void {
+  _executeProcessorSync(event: Electron.IpcMainEvent, methodName: MethodName, ...args: TupleToSimpleObject<any>): void {
 
     const methodReturn: MethodReturn = {
       isSuccess: false,
